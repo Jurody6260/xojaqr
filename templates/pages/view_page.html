@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}
+View page
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-11">
+                <img class="border" src="{{url_for('static', filename=u.path)}}" alt="Image" style="max-width:95%;height:100%;">
+            </div>
+            <div class="col-sm-1">
+                {{ qr|safe }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
