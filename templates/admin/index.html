@@ -1,0 +1,9 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+{{ super() }}
+{% for u in users %}
+<span>{{u.username}}</span>
+{% endfor %}
+  <p>Hello world</p>
+{% endblock %}

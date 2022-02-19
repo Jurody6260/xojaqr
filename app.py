@@ -7,7 +7,7 @@ from flask_login import UserMixin, LoginManager, login_required, current_user, l
 import qrcode
 import qrcode.image.svg
 from io import BytesIO
-from flask_admin import Admin, AdminIndexView
+from flask_admin import Admin, expose
 from flask_admin.contrib.sqla import ModelView
 
 app = Flask(__name__)
@@ -45,7 +45,7 @@ class MicroBlogModelView(ModelView):
 
 db.create_all()
 admin = Admin(app)
-admin.add_view(MicroBlogModelView(User, db.session))
+admin.add_view(MicroBlogModelView(User, db.session))    
 
 @login_manager.user_loader
 def load_user(user_id):
