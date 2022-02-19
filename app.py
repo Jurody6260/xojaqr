@@ -7,6 +7,8 @@ from flask_login import UserMixin, LoginManager, login_required, current_user, l
 import qrcode
 import qrcode.image.svg
 from io import BytesIO
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
 
 app = Flask(__name__)
 login_manager = LoginManager(app)
@@ -18,6 +20,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "HAPPYBIRTHDAYSUCHARA"
 db = SQLAlchemy(app)
 
+
 extens = ['jpg', 'gif', 'mp3', 'png', 'mp4']
 
 class User(UserMixin, db.Model):
@@ -25,13 +28,24 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     path = db.Column(db.String, nullable=True)
+    role = db.Column(db.String, default='chort')
 
     def __repr__(self):
         return '<User %r>' % self.username
 
+class MicroBlogModelView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.role == 'admin'
+
+    def inaccessible_callback(self, name, **kwargs):
+        # redirect to login page if user doesn't have access
+        return redirect(url_for('login', next=request.url))
+
+# db.drop_all()
 
 db.create_all()
-
+admin = Admin(app)
+admin.add_view(MicroBlogModelView(User, db.session))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -44,6 +58,8 @@ def Get_Load(user_id):
 
 @app.route('/login', methods = ['GET','POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     if request.method == 'POST':
         login = request.form.get('login')
         password = request.form.get('password')
