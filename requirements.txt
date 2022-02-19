@@ -1,4 +1,6 @@
+flask-admin
 flask-login
 flask-sqlalchemy
+gunicorn
 pip-chill
 qrcode
