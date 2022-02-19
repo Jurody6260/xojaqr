@@ -16,6 +16,10 @@ Main page
                 <div class="col-sm-3">
                     <input type = "submit" class="btn btn-primary"/>
                 </div>
+                
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"><a href="{{ url_for('view_page', id=current_user.id) }}" class="btn btn-success">Your file</a></div>
+                <div class="col-sm-4"></div>
             </div>
         </div>
     </form>
