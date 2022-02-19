@@ -18,6 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "HAPPYBIRTHDAYSUCHARA"
 db = SQLAlchemy(app)
 
+extens = ['jpg', 'gif', 'mp3', 'png', 'mp4']
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,6 +28,9 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+db.create_all()
 
 
 @login_manager.user_loader
@@ -69,6 +73,14 @@ def index():
 def upload_file():
     f = request.files['file']
     if f.filename != '':
+        exten = f.filename.split(".")[-1]
+        if exten not in extens:
+            return redirect(url_for("index"))
+        print(exten)
+        try:
+            os.remove('static/' + current_user.path)
+        except Exception as e:
+            print(str(e))
         filename = secure_filename(f.filename)
         filename = str(current_user.id) + "_" + filename
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
